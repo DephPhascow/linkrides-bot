@@ -1,0 +1,11 @@
+env/
+*.txt
+!requirements.txt
+__pycache__/
+.env
+migrations/
+venv
+keys/*.json
+*-schedule*
+exports/*
+!exports/
