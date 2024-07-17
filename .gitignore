@@ -9,3 +9,4 @@ keys/*.json
 *-schedule*
 exports/*
 !exports/
+*.toml

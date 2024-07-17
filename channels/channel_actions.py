@@ -1,4 +1,4 @@
-from aiogram import flags
+from aiogram import flags, F
 from aiogram.types import CallbackQuery
 from loaders import channel_router
 

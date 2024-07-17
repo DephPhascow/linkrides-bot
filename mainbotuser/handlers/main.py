@@ -36,7 +36,7 @@ async def on_start(message: Message, bot: Bot, command: CommandObject):
     args: str = command.args
     if args:
         pass
-    await message.answer("test", reply_markup=reply_kb_test())
+    await message.answer("test")
     
 @main_bot_router.message(F.text == 'test')
 @flags.rate_limit(key="on_create_bot")
