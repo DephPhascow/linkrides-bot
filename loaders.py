@@ -8,6 +8,7 @@ from aiogram.client.default import DefaultBotProperties
 from filters.chat_filter import ChatTypeFilter
 from middlewares.bot_reconstruction import BotInReconstruction
 from middlewares.error_handler import ErrorHandler
+from middlewares.language_middleware import LanguageMiddleware
 from middlewares.trottling import ThrottlingMiddleware
 from middlewares.user_data import UserDataMiddleware
 from aiogram.types import BotCommand
@@ -20,6 +21,7 @@ from apscheduler.jobstores.redis import RedisJobStore
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from aiogram.fsm.strategy import FSMStrategy
 from aiogram.enums import ParseMode
+from aiogram.utils.i18n import I18n
 
 async def delete_webhook(bot_token: str):
     async with Bot(bot_token, bot_session).context(auto_close=False) as bot_:
@@ -45,6 +47,8 @@ async def run_webhook(bot_token: str):
                 await bot_.set_my_commands(bot_commands)
     except TelegramUnauthorizedError as e:
         pass
+    
+
 
 redis = None
 if not IS_LOCAL_BOT:
@@ -90,6 +94,10 @@ for middleware in [
 ]:
     dp.message.middleware(middleware)
     dp.callback_query.middleware(middleware)
+    
+i18n = I18n(path="locales", default_locale="ru", domain="messages")
+a = LanguageMiddleware(i18n)
+a.setup(dp)
 
 async def close_sessions():
     if not IS_LOCAL_BOT:

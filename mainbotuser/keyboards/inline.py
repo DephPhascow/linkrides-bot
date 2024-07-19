@@ -1,15 +1,13 @@
 from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from mainbotuser.callback_datas import TestCallbackData
 
-async def inline_kb_test():
+async def profile_kb():
     btns = InlineKeyboardBuilder()
     list = [
-        InlineKeyboardButton(text=f"test 1", callback_data="test-1"),
-        InlineKeyboardButton(text=f"test 2", callback_data=TestCallbackData(test="test").pack()),
+        InlineKeyboardButton(text=f"🚕 История поездок", callback_data="history"),
     ]
     btns.row(
         *list,        
-        width=1,
+        width=2,
     )
     return btns.as_markup()

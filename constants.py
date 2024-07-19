@@ -9,6 +9,7 @@ HOST = os.getenv("HOST")
 DB_URL=os.getenv("DB_URL")
 REDIS = os.getenv("REDIS")
 ERROR_CHANNEL = os.getenv("ERROR_CHANNEL")
+GRAPHQL_URL = os.getenv("GRAPHQL_URL")
 BOT_IN_RECONSTRUCTION = True if os.getenv("BOT_IN_RECONSTRUCTION") == "True" else False
 PROJECT_HOST = os.getenv("PROJECT_HOST")
 PROJECT_PORT = int(os.getenv("PROJECT_PORT"))
