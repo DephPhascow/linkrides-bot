@@ -31,4 +31,4 @@ async def on_start(message: Message, state: FSMContext):
     else:
         user.language = lang
         await user.save()
-    await message.answer(_("Добро пожаловать!"), reply_markup=await main_panel())
+    await message.answer(_("Добро пожаловать!"), reply_markup=await main_panel(message.from_user.id))

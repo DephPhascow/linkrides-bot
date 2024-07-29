@@ -6,7 +6,7 @@ from loaders import main_bot_router
 from mainbotuser.keyboards.reply_kb import find_taxi
 from mainbotuser.states import FindTaxiState
 from aiogram.fsm.context import FSMContext
-from aiogram.utils.i18n import gettext as _
+from aiogram.utils.i18n import gettext as _, lazy_gettext as __
 from aiogram.utils.chat_action import ChatActionSender
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
@@ -57,8 +57,8 @@ async def show_text(message: Message, state: FSMContext, bot: Bot):
     await state.update_data(message_id=msg.message_id)
     
     
-@main_bot_router.message(F.text == "❌ Отмена", StateFilter(FindTaxiState.set_from_address))
-@main_bot_router.message(F.text == "❌ Отмена", StateFilter(FindTaxiState.set_to_address))
+@main_bot_router.message(F.text == __("❌ Отмена"), StateFilter(FindTaxiState.set_from_address))
+@main_bot_router.message(F.text == __("❌ Отмена"), StateFilter(FindTaxiState.set_to_address))
 @flags.rate_limit(key="on_select_find_taxi")
 async def on_start(message: Message, state: FSMContext, bot: Bot):
     data = await state.get_data()
@@ -70,7 +70,7 @@ async def on_start(message: Message, state: FSMContext, bot: Bot):
         await message.answer(_("❌ Отменено"))
         
     
-@main_bot_router.message(F.text == "🚕 Найти такси")
+@main_bot_router.message(F.text == __("🚕 Найти такси"))
 @flags.rate_limit(key="on_select_find_taxi")
 async def on_start(message: Message, state: FSMContext, bot: Bot):
     async with ChatActionSender.typing(bot=bot, chat_id=message.from_user.id):

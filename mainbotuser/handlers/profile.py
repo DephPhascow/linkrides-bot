@@ -6,11 +6,11 @@ from loaders import main_bot_router
 from mainbotuser.keyboards.inline import profile_kb
 from mainbotuser.states import LanguageState
 from aiogram.fsm.context import FSMContext
-from aiogram.utils.i18n import gettext as _
+from aiogram.utils.i18n import gettext as _, lazy_gettext as __
 from aiogram.utils.chat_action import ChatActionSender
 from geopy.geocoders import Nominatim
     
-@main_bot_router.message(F.text == "👤 Мой профиль")
+@main_bot_router.message(F.text == __("👤 Мой профиль"))
 @flags.rate_limit(key="on_select_profile")
 async def on_start(message: Message, state: FSMContext, bot: Bot):
     async with ChatActionSender.typing(bot=bot, chat_id=message.from_user.id):

@@ -33,9 +33,7 @@ REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
 REDIS_HOST = os.getenv("REDIS_HOST")
 REDIS_PORT = int(os.getenv("REDIS_PORT"))
 
-ADMIN_LIST = [
-    int(ADMIN),
-]
+ADMIN_LIST = literal_eval(os.getenv("ADMINS"))
 
 CONFIGS = {
     "BOT_ON_RECONSTRUCTION": BOT_IN_RECONSTRUCTION,

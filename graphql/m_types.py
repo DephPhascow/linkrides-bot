@@ -1,6 +1,12 @@
 import datetime
 from .core.gql_type import GQLType
 from dataclasses import dataclass
+from enum import StrEnum
+
+class DrivingStatus(StrEnum):
+    WAIT = "WAIT"
+    DRIVE = "DRIVE"
+    REST = "REST"
 
 @dataclass
 class TaxiHistoryType(GQLType):

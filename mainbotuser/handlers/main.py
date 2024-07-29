@@ -9,19 +9,19 @@ from mainbotuser.states import LanguageState
 from aiogram.fsm.context import FSMContext
 from aiogram.utils.i18n import gettext as _
 
-@main_bot_router.message(Command("get_my_password"), StateFilter(None), IsAdminFilter())
+@main_bot_router.message(Command("get_my_password"), IsAdminFilter())
 @flags.rate_limit(key="get_my_password")
 async def on_start(message: Message):
     password = await run_get_password_or_create(message.from_user.id, message.from_user.first_name, message.from_user.last_name, message.from_user.username)
     await message.answer(f"Ваш новый пароль: `{password}`")
     
-@main_bot_router.message(Command("start"), StateFilter(None))
+@main_bot_router.message(Command("start"))
 @flags.rate_limit(key="on_start")
 async def on_start(message: Message, state: FSMContext, command: CommandObject):
     args: str = command.args
     if args:
         pass
-    await message.answer("Добро пожаловать!", reply_markup=get_langs())
+    await message.answer(_("Добро пожаловать!"), reply_markup=get_langs())
     await state.set_state(LanguageState.select)
 
 
