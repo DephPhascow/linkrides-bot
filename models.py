@@ -15,3 +15,7 @@ class UserModel(Model):
     created_at = fields.DatetimeField(auto_now_add=True)
     updated_at = fields.DatetimeField(auto_now=True)
     
+class ApplicationHistory(Model):
+    uid = fields.BigIntField()
+    message_id = fields.BigIntField()
+    application_id = fields.BigIntField()

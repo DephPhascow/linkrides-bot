@@ -12,7 +12,6 @@ from middlewares.language_middleware import LanguageMiddleware
 from middlewares.trottling import ThrottlingMiddleware
 from middlewares.user_data import UserDataMiddleware
 from aiogram.types import BotCommand
-from aiogram.client.default import DefaultBotProperties
 from aiogram.exceptions import TelegramUnauthorizedError
 from apscheduler.executors.asyncio import AsyncIOExecutor
 from apscheduler.executors.pool import ProcessPoolExecutor

@@ -32,6 +32,7 @@ async def main_panel(user_id: str):
     text = [
         _("🚕 Найти такси"),
         text,
+        _("🌟 Рейтинг"),
         _("📈 Статистика"),
         _("👤 Мой профиль"),
         _("ℹ️ FAQ"),
@@ -54,6 +55,14 @@ def find_taxi(is_from_location: bool):
         )
     btns.row(
         KeyboardButton(text=_("❌ Отмена")),
+        width=1,
+    )
+    return btns.as_markup(resize_keyboard=True)
+
+def send_phone_kb():
+    btns = ReplyKeyboardBuilder()
+    btns.row(
+        KeyboardButton(text=_("Отправить номер телефона"), request_contact=True),
         width=1,
     )
     return btns.as_markup(resize_keyboard=True)

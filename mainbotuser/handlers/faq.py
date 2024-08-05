@@ -2,7 +2,7 @@ from aiogram import Bot, flags, F
 from aiogram.filters import StateFilter
 from aiogram.types import Message
 from loaders import main_bot_router
-from mainbotuser.states import LanguageState
+from mainbotuser.states import RegistrationState
 from aiogram.fsm.context import FSMContext
 from aiogram.utils.i18n import gettext as _, lazy_gettext as __
 from aiogram.utils.chat_action import ChatActionSender

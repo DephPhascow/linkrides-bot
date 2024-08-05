@@ -15,6 +15,7 @@ def get_password():
             "firstName": "String",
             "lastName": "String",
             "username": "String",
+            "phoneNumber": "String",
         }
     )
     
@@ -47,7 +48,36 @@ def taxi_set_status():
             "status": "DrivingStatus!",
         }
     )
+def find_taxi():
+    return gen_mutate(
+        name="findTaxi",
+        request="__typename",
+        var={
+            "tariffId": "Int!",
+            "fromLatitude": "Float!",
+            "fromLongitude": "Float!",
+            "toLatitude": "Float",
+            "toLongitude": "Float",
+        }
+    )
     
+async def run_find_taxi(tg_id: int, tariff_id: int, from_latitude: float, from_longitude: float, to_latitude: Optional[float] = None, to_longitude: Optional[float] = None) -> int:
+    executor = gql.add_query("findTaxi", find_taxi())
+    user: UserModel = await UserModel.get_or_none(uid=tg_id)
+    auth: AuthMiddleware = executor['middleware__auth']
+    await auth.set_data(f'{user.uid}', user.password, user.jwt_token, user.jwt_token_exp, user.jwt_refresh_token, user.jwt_refresh_token_exp)
+    kwargs = {
+        "tariffId": tariff_id,
+        "fromLatitude": from_latitude,
+        "fromLongitude": from_longitude,
+    }
+    if to_latitude:
+        kwargs['toLatitude'] = to_latitude
+    if to_longitude:
+        kwargs['toLongitude'] = to_longitude
+    response = await executor.execute(variables=kwargs)
+    return response['findTaxi']
+
 async def run_taxi_set_status(tg_id: int, status: DrivingStatus) -> int:
     executor = gql.add_query("taxi_set_status", taxi_set_status())
     user: UserModel = await UserModel.get_or_none(uid=tg_id)
@@ -70,13 +100,14 @@ async def run_taxi_set_my_location(tg_id: int, latitude: float, longitude: float
     })
     return response['taxiSetMyCurrentLocation']
 
-async def run_get_password_or_create(tg_id: int, first_name: str, last_name: Optional[str] = None, username: Optional[str] = None) -> str:
+async def run_get_password_or_create(tg_id: int, first_name: str, last_name: Optional[str] = None, username: Optional[str] = None, phone_number: str = None) -> str:
     executor = gql.add_query("getPasswordOrCreate", get_password())
     response = await executor.execute(variables={
         "tgId": f'{tg_id}',
         "firstName": first_name,
         "lastName": last_name,
-        "username": username
+        "username": username,
+        "phoneNumber": phone_number,
     }, ignore_middlewares=['auth'])
     return response['getPasswordOrCreate']
 

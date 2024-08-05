@@ -47,7 +47,6 @@ async def feed_update(token, update):
 @app.post(WEBHOOK_PATH, include_in_schema=False)
 async def telegram_update(token: str, background_tasks: BackgroundTasks,
                           update: dict = Body(...)) -> Response:
-    print(f'{token} {BOT_TOKEN}')
     if token == BOT_TOKEN:
         background_tasks.add_task(feed_update, token, update)
         return Response(status_code=status.HTTP_202_ACCEPTED)

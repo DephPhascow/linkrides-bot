@@ -25,7 +25,6 @@ async def on_start(message: Message, state: FSMContext, bot: Bot):
 async def on_start(message: Message, state: FSMContext, bot: Bot):
     async with ChatActionSender.typing(bot=bot, chat_id=message.from_user.id):
         status = await run_get_my_taxi_status(message.from_user.id)
-        me = await get_user(message.from_user.id)
         match status:
             case None:
                 await message.answer(_("Вы еще не заполнили свой профиль, пожалуйста, сперва, заполните его"), reply_markup=fill_taxi_info())
