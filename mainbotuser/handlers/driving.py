@@ -1,16 +1,17 @@
 from aiogram import Bot, flags, F
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from graphql.m_types import DrivingStatus
-from graphql.mutations import run_taxi_set_my_location, run_taxi_set_status
+from graphql.mutations import run_taxi_cancel_application, run_taxi_set_my_location, run_taxi_set_status
 from graphql.queres import run_get_my_taxi_status
 from loaders import main_bot_router
 from aiogram.fsm.context import FSMContext
 from aiogram.utils.i18n import gettext as _, lazy_gettext as __
 from aiogram.utils.chat_action import ChatActionSender
 from aiogram.filters.state import StateFilter
+from mainbotuser.callback_datas import ApplicationCallbackData
 from mainbotuser.keyboards.inline import fill_taxi_info
 from mainbotuser.keyboards.reply_kb import cancel, main_panel
-from mainbotuser.shortcuts import get_user
+from mainbotuser.shortcuts import add_life_location, delete_life_location_by_user_id, get_life_location, get_user
 from mainbotuser.states import TaxiState
 
 @main_bot_router.message(F.text == __("⛔️ Завершить работу"))
@@ -18,6 +19,7 @@ from mainbotuser.states import TaxiState
 async def on_start(message: Message, state: FSMContext, bot: Bot):
     async with ChatActionSender.typing(bot=bot, chat_id=message.from_user.id):
         await run_taxi_set_status(message.from_user.id, DrivingStatus.REST)
+        await delete_life_location_by_user_id(message.message_id)
         await message.answer(_("Вы закончили работу, чтобы начать новую, нажмите на кнопку 'Начать водить'"), reply_markup=await main_panel(message.from_user.id))        
         
 @main_bot_router.message(F.text == __("🚖 Начать водить"))
@@ -52,6 +54,30 @@ async def on_start(message: Message, state: FSMContext, bot: Bot):
             return
         try:
             await run_taxi_set_my_location(message.from_user.id, message.location.latitude, message.location.longitude, DrivingStatus.WAIT)
+            await add_life_location(message.message_id, message.from_user.id)
             await message.answer(_("Ваша геолокация успешно установлена, теперь Вы можете ожидать новых клиентов"), reply_markup=await main_panel(message.from_user.id))
+            await state.clear()
         except Exception as e:
             await message.answer(_("Произошла ошибка {error}, попробуйте позже").format(error=f'{e}'), reply_markup=await main_panel(message.from_user.id))
+
+@main_bot_router.edited_message()
+async def on_start(message: Message, state: FSMContext, bot: Bot):
+    instance = await get_life_location(message.message_id)
+    if not instance:
+        return
+    await message.answer("here")
+    if message.location:
+        if not message.location.live_period:
+            await instance.delete()
+            await run_taxi_set_status(message.from_user.id, DrivingStatus.REST)
+            return
+        await run_taxi_set_my_location(message.from_user.id, message.location.latitude, message.location.longitude, DrivingStatus.WAIT)
+
+@main_bot_router.callback_query(ApplicationCallbackData.filter())
+@flags.rate_limit(key="on_select_set_location")
+async def on_start(query: CallbackQuery, state: FSMContext, bot: Bot, callback_query: ApplicationCallbackData):
+    if callback_query.action == "reject":
+        await run_taxi_cancel_application(query.from_user.id, callback_query.pk)
+        await query.answer(_("Отклонено"), show_alert=True)
+        await query.message.delete()
+        return

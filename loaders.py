@@ -31,13 +31,13 @@ async def run_webhook(bot_token: str):
     try:
         async with Bot(bot_token, bot_session, DefaultBotProperties(parse_mode=ParseMode.MARKDOWN_V2)).context(auto_close=False) as bot_:  
             webhook_info = await bot_.get_webhook_info()
-            if webhook_info.url != webhook_url or webhook_info.allowed_updates != ALLOWED_UPDATES:
-                await bot_.set_webhook(
-                    webhook_url,
-                    allowed_updates=ALLOWED_UPDATES,
-                    drop_pending_updates=False,
-                    secret_token=AIOGRAM_SECRET,
-                )
+            # if webhook_info.url != webhook_url or webhook_info.allowed_updates != ALLOWED_UPDATES:
+            await bot_.set_webhook(
+                webhook_url,
+                allowed_updates=ALLOWED_UPDATES,
+                drop_pending_updates=False,
+                secret_token=AIOGRAM_SECRET,
+            )
             commands = await bot_.get_my_commands()
             bot_commands = [
                 BotCommand(command="/start", description="Начать использование"),

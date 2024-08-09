@@ -11,10 +11,8 @@ class DrivingStatus(StrEnum):
 
 @dataclass
 class TaxiHistoryType(GQLType):
-    from_latitude: float
-    from_longitude: float
-    to_longitude: float
-    to_latitude: float
+    from_address: float
+    to_address: float
     price: float
     created_at: datetime
     fio: str

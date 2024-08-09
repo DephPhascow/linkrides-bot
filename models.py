@@ -19,3 +19,7 @@ class ApplicationHistory(Model):
     uid = fields.BigIntField()
     message_id = fields.BigIntField()
     application_id = fields.BigIntField()
+    
+class LifeLocation(Model):
+    message_id = fields.BigIntField()
+    user_uid = fields.BigIntField()

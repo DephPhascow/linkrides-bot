@@ -17,7 +17,6 @@ async def on_start(message: Message, state: FSMContext, bot: Bot):
         await message.answer(_("Ваш профиль"), reply_markup=await profile_kb(message.from_user.id))
 
 async def generator_text(user_id: int, which: WhichEnum):
-    geolocator = Nominatim(user_agent="linkrides-bot")
     history = await run_taxi_history(user_id, which)
     name = "🚖 Водитель" if which == WhichEnum.PASSENGER else "👤 Пассажир"
     template = _(
@@ -29,8 +28,8 @@ async def generator_text(user_id: int, which: WhichEnum):
     )
     text = [
         template.format(
-            from_ = geolocator.reverse((x.from_latitude, x.from_longitude)).address,
-            to = geolocator.reverse((x.to_latitude, x.to_longitude)).address,
+            from_ = x.from_address,
+            to = x.to_address,
             date = x.created_at.strftime("%d.%m.%Y %H:%M"),
             price = f"{x.price:,.2f}",
             driver = x.fio,
@@ -44,7 +43,7 @@ async def generator_text(user_id: int, which: WhichEnum):
 async def on_start(query: CallbackQuery, state: FSMContext, bot: Bot):
     async with ChatActionSender.typing(bot=bot, chat_id=query.from_user.id):
         text = await generator_text(query.from_user.id, WhichEnum.PASSENGER)
-        if text == "":
+        if len(text) == 0:
             text = _("История пуста")
         await query.message.edit_text(_("*История поездок*\n\n{text}").format(text="\r\n".join(text)), reply_markup=await profile_kb(query.from_user.id))
 

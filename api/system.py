@@ -44,7 +44,25 @@ async def test(
                 await add_application_message(taxi_id, application_id, msg.message_id)
         return Response(status_code=200)
 
-@router.post("/application/delete")
+@router.post("/application/deleted")
+async def test(
+        request: Request,
+        background_tasks: BackgroundTasks,
+        client_id: int,
+        application_id: int,
+):
+        async with Bot(BOT_TOKEN, bot_session, DefaultBotProperties(parse_mode=ParseMode.MARKDOWN)).context(auto_close=False) as bot_:  
+                template = """
+К сожалению, сейчас нет доступных таксистов. Попробуйте позже.
+
+🚖 ID заказа: {application_id}
+                """
+                await bot_.send_message(client_id, template.format(
+                        application_id=application_id,
+                ))
+        return Response(status_code=200)
+
+@router.post("/application/cancelled")
 async def test(
         request: Request,
         background_tasks: BackgroundTasks,
@@ -54,4 +72,24 @@ async def test(
         async with Bot(BOT_TOKEN, bot_session, DefaultBotProperties(parse_mode=ParseMode.MARKDOWN)).context(auto_close=False) as bot_:
                 for application in applications:
                         await bot_.delete_message(application.uid, application.message_id)
+        return Response(status_code=200)
+
+@router.post("/application/accepted")
+async def test(
+        request: Request,
+        background_tasks: BackgroundTasks,
+        application_id: int,
+        client_id: int,
+        taxi_id: int,
+        current_taxi_latitude: float,
+        current_taxi_longitude: float,
+        taxi_fio: str,
+        taxi_username: Optional[str],
+        taxi_phone_number: Optional[str],
+        car_brand: str,
+        car_model: str,
+        car_color: str,
+        car_number: str,    
+):
+        pass
         return Response(status_code=200)

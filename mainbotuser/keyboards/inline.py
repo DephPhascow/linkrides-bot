@@ -45,8 +45,11 @@ async def show_tariffs(user_id: int):
 def application_taxi_manipulation(application_id: int):
     btns = InlineKeyboardBuilder()
     btns.row(
-        InlineKeyboardButton(text=_("Отклонить"), callback_data=ApplicationCallbackData(action="reject", pk=application_id).pack()),
-        InlineKeyboardButton(text=_("Принять"), callback_data=ApplicationCallbackData(action="accept", pk=application_id).pack()),
+        InlineKeyboardButton(text="Отклонить", callback_data=ApplicationCallbackData(action="reject", pk=application_id).pack()),
+        InlineKeyboardButton(text="Принять", callback_data=ApplicationCallbackData(action="accept", pk=application_id).pack()),
+        #TODO эти кнопки выводятся в API там нет i18n надо там настроить
+        # InlineKeyboardButton(text=_("Отклонить"), callback_data=ApplicationCallbackData(action="reject", pk=application_id).pack()),
+        # InlineKeyboardButton(text=_("Принять"), callback_data=ApplicationCallbackData(action="accept", pk=application_id).pack()),
         width=1,
     )
     return btns.as_markup()

@@ -25,7 +25,7 @@ def taxi_history(which: WhichEnum):
     name="history",
     request=f"fromLatitude, fromLongitude, toLongitude, toLatitude, price, createdAt, {request} {{ firstName, lastName }}",
     to_type=TaxiHistoryType,
-    q_words=f"data.history[*].{{ from_latitude: fromLatitude, from_longitude: fromLongitude, to_longitude: toLongitude, to_latitude: toLatitude, price: price, created_at: createdAt, fio: join(' ', [{request}.firstName || '', {request}.lastName || '']) }}",
+    q_words=f"data.history[*].{{ from_address: fromAddress, to_address: toAddress, price: price, created_at: createdAt, fio: join(' ', [{request}.firstName || '', {request}.lastName || '']) }}",
     var={
       "type": "UserDriveType!"
     }

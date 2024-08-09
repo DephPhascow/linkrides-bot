@@ -60,7 +60,42 @@ def find_taxi():
             "toLongitude": "Float",
         }
     )
+def taxi_cancel_application():
+    return gen_mutate(
+        name="taxiCancelApplication",
+        var={
+            "applicationId": "Int!",
+        }
+    )
+
+def taxi_accept_application():
+    return gen_mutate(
+        name="taxiAcceptApplication",
+        var={
+            "applicationId": "Int!",
+        }
+    )
     
+async def run_taxi_accept_application(tg_id: int, application_id: int) -> bool:
+    executor = gql.add_query("taxi_accept_application", taxi_accept_application())
+    user: UserModel = await UserModel.get_or_none(uid=tg_id)
+    auth: AuthMiddleware = executor['middleware__auth']
+    await auth.set_data(f'{user.uid}', user.password, user.jwt_token, user.jwt_token_exp, user.jwt_refresh_token, user.jwt_refresh_token_exp)
+    response = await executor.execute(variables={
+        "applicationId": application_id
+    })
+    return response['taxiAcceptApplication']
+
+async def run_taxi_cancel_application(tg_id: int, application_id: int) -> bool:
+    executor = gql.add_query("taxi_cancel_application", taxi_cancel_application())
+    user: UserModel = await UserModel.get_or_none(uid=tg_id)
+    auth: AuthMiddleware = executor['middleware__auth']
+    await auth.set_data(f'{user.uid}', user.password, user.jwt_token, user.jwt_token_exp, user.jwt_refresh_token, user.jwt_refresh_token_exp)
+    response = await executor.execute(variables={
+        "applicationId": application_id
+    })
+    return response['taxiCancelApplication']
+
 async def run_find_taxi(tg_id: int, tariff_id: int, from_latitude: float, from_longitude: float, to_latitude: Optional[float] = None, to_longitude: Optional[float] = None) -> int:
     executor = gql.add_query("findTaxi", find_taxi())
     user: UserModel = await UserModel.get_or_none(uid=tg_id)
@@ -84,7 +119,7 @@ async def run_taxi_set_status(tg_id: int, status: DrivingStatus) -> int:
     auth: AuthMiddleware = executor['middleware__auth']
     await auth.set_data(f'{user.uid}', user.password, user.jwt_token, user.jwt_token_exp, user.jwt_refresh_token, user.jwt_refresh_token_exp)
     response = await executor.execute(variables={
-        "status": status
+        "status": status.value
     })
     return response['taxiSetStatus']
 
@@ -96,7 +131,7 @@ async def run_taxi_set_my_location(tg_id: int, latitude: float, longitude: float
     response = await executor.execute(variables={
         "latitude": latitude,
         "longitude": longitude,
-        "status": status
+        "status": status.value
     })
     return response['taxiSetMyCurrentLocation']
 
