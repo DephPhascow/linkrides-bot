@@ -7,6 +7,7 @@ from .profile import main_bot_router
 from .application import main_bot_router
 from .faq import main_bot_router
 from .ratings import main_bot_router
+from .referral import main_bot_router
 
 
 from .unknown import main_bot_router

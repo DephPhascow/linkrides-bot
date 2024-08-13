@@ -8,7 +8,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.utils.i18n import gettext as _
 from aiogram.utils.chat_action import ChatActionSender
 
-    
+
 @main_bot_router.callback_query(ApplicationCallbackData.filter())
 @flags.rate_limit(key="on_application")
 async def on_start(query: CallbackQuery, state: FSMContext, bot: Bot, callback_data: ApplicationCallbackData):

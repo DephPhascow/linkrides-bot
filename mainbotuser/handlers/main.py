@@ -20,6 +20,7 @@ async def on_start(message: Message):
 async def on_start(message: Message, state: FSMContext, command: CommandObject):
     args: str = command.args
     if args:
-        pass
+        referrer_id = int(args)
+        await state.update_data(referrer_id=referrer_id)
     await message.answer(_("Добро пожаловать!"), reply_markup=get_langs())
     await state.set_state(RegistrationState.select_language)

@@ -46,7 +46,8 @@ async def on_start(message: Message, state: FSMContext):
             f.write(f"{message.contact}\n")
         data = await state.get_data()
         language = data.get("language")
-        await create_user(message.from_user.id, message.from_user.first_name, message.from_user.last_name, message.from_user.username, language, phone_number)
+        referrer_id = data.get("referrer_id")
+        await create_user(message.from_user.id, message.from_user.first_name, message.from_user.last_name, message.from_user.username, language, phone_number, referrer_id)
         await state.clear()
         await message.answer(_("Добро пожаловать!"), reply_markup=await main_panel(message.from_user.id))
     else:

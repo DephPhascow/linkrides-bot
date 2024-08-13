@@ -48,9 +48,9 @@ def get_tariffs():
 def get_top():
   return gen_query(
     name="top",
-    request="id, firstName, lastName, balls",
+    request="id, firstName, lastName, countBalls",
     to_type=TopType,
-    q_words="data.top[*].{ id: id, name: join(' ', [firstName || 'Не указано', lastName || '']), balls: balls }",
+    q_words="data.top[*].{ id: id, name: join(' ', [firstName || 'Не указано', lastName || '']), balls: countBalls }",
     var={
       "topType": "TopByEnum!"
     }

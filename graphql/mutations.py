@@ -16,6 +16,7 @@ def get_password():
             "lastName": "String",
             "username": "String",
             "phoneNumber": "String",
+            "referrerId": "String",
         }
     )
     
@@ -135,7 +136,7 @@ async def run_taxi_set_my_location(tg_id: int, latitude: float, longitude: float
     })
     return response['taxiSetMyCurrentLocation']
 
-async def run_get_password_or_create(tg_id: int, first_name: str, last_name: Optional[str] = None, username: Optional[str] = None, phone_number: str = None) -> str:
+async def run_get_password_or_create(tg_id: int, first_name: str, last_name: Optional[str] = None, username: Optional[str] = None, phone_number: str = None, referrer_id: Optional[int] = None) -> str:
     executor = gql.add_query("getPasswordOrCreate", get_password())
     response = await executor.execute(variables={
         "tgId": f'{tg_id}',
@@ -143,6 +144,7 @@ async def run_get_password_or_create(tg_id: int, first_name: str, last_name: Opt
         "lastName": last_name,
         "username": username,
         "phoneNumber": phone_number,
+        "referrerId": f'{referrer_id}',
     }, ignore_middlewares=['auth'])
     return response['getPasswordOrCreate']
 

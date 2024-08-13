@@ -62,10 +62,10 @@ async def on_start(message: Message, state: FSMContext, bot: Bot):
 
 @main_bot_router.edited_message()
 async def on_start(message: Message, state: FSMContext, bot: Bot):
+    bot.send_location
     instance = await get_life_location(message.message_id)
     if not instance:
         return
-    await message.answer("here")
     if message.location:
         if not message.location.live_period:
             await instance.delete()
@@ -73,11 +73,3 @@ async def on_start(message: Message, state: FSMContext, bot: Bot):
             return
         await run_taxi_set_my_location(message.from_user.id, message.location.latitude, message.location.longitude, DrivingStatus.WAIT)
 
-@main_bot_router.callback_query(ApplicationCallbackData.filter())
-@flags.rate_limit(key="on_select_set_location")
-async def on_start(query: CallbackQuery, state: FSMContext, bot: Bot, callback_query: ApplicationCallbackData):
-    if callback_query.action == "reject":
-        await run_taxi_cancel_application(query.from_user.id, callback_query.pk)
-        await query.answer(_("Отклонено"), show_alert=True)
-        await query.message.delete()
-        return

@@ -8,6 +8,14 @@ from graphql.enums import TopEnum
 from graphql.queres import run_get_my_taxi_status, run_get_tariffs
 from mainbotuser.callback_datas import ApplicationCallbackData, TariffCallbackData
 
+def send_my_phone_number(application_id: int):
+    btns = InlineKeyboardBuilder()
+    btns.row(
+        InlineKeyboardButton(text=f"Предоставить номер телефона", callback_data="set_my_phone")
+        # InlineKeyboardButton(text=_(f"Предоставить номер телефона"), callback_data="set_my_phone")
+    )
+    return btns.as_markup()
+
 def fill_taxi_info():
     btns = InlineKeyboardBuilder()
     btns.row(
